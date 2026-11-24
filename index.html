@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>小账本</title>
+<meta name="theme-color" content="#f5f6f8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="小账本">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <h1 id="pageTitle">概览</h1>
+    <button class="month-nav hidden" id="monthNav" type="button">
+      <span class="chev" data-month="-1" aria-label="上个月">‹</span>
+      <span id="monthLabel">—</span>
+      <span class="chev" data-month="1" aria-label="下个月">›</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  <section id="view-overview" class="view"></section>
+  <section id="view-list" class="view hidden"></section>
+  <section id="view-stats" class="view hidden"></section>
+  <section id="view-settings" class="view hidden"></section>
+</main>
+
+<button class="fab" id="fabAdd" type="button" aria-label="记一笔">＋</button>
+
+<nav class="tabbar" id="tabbar">
+  <button class="tab active" data-view="overview" type="button"><i>◲</i><span>概览</span></button>
+  <button class="tab" data-view="list" type="button"><i>☰</i><span>明细</span></button>
+  <button class="tab" data-view="stats" type="button"><i>◔</i><span>统计</span></button>
+  <button class="tab" data-view="settings" type="button"><i>⚙</i><span>设置</span></button>
+</nav>
+
+<div class="backdrop hidden" id="backdrop"></div>
+
+<!-- 记账 / 编辑 -->
+<section class="sheet hidden" id="entrySheet" role="dialog" aria-modal="true">
+  <div class="sheet-head">
+    <button class="text-btn" id="entryCancel" type="button">取消</button>
+    <div class="sheet-title" id="entryTitle">记一笔</div>
+    <button class="text-btn primary" id="entrySave" type="button">保存</button>
+  </div>
+  <div class="sheet-body">
+    <div class="seg" id="typeSeg">
+      <button class="seg-item active" data-type="expense" type="button">支出</button>
+      <button class="seg-item" data-type="income" type="button">收入</button>
+      <button class="seg-item" data-type="transfer" type="button">转账</button>
+    </div>
+    <div class="amount-wrap">
+      <span class="cur">¥</span>
+      <input id="amountInput" class="amount" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off">
+    </div>
+    <div class="field-label">分类</div>
+    <div class="chips" id="catChips"></div>
+    <div class="grid2">
+      <label class="field">
+        <span>账户</span>
+        <select id="accountSelect"></select>
+      </label>
+      <label class="field" id="toAccountField">
+        <span>转入</span>
+        <select id="toAccountSelect"></select>
+      </label>
+      <label class="field">
+        <span>日期</span>
+        <input id="dateInput" type="date">
+      </label>
+      <label class="field">
+        <span>备注</span>
+        <input id="noteInput" type="text" maxlength="60" placeholder="选填">
+      </label>
+    </div>
+    <button class="danger-btn hidden" id="entryDelete" type="button">删除这笔</button>
+  </div>
+</section>
+
+<!-- 导入账单 -->
+<section class="sheet hidden" id="importSheet" role="dialog" aria-modal="true">
+  <div class="sheet-head">
+    <button class="text-btn" id="importCancel" type="button">关闭</button>
+    <div class="sheet-title">导入账单</div>
+    <button class="text-btn primary hidden" id="importCommit" type="button">导入</button>
+  </div>
+  <div class="sheet-body">
+    <div class="hint" id="importHint">
+      支持微信支付、支付宝导出的 CSV 账单。微信：我 → 服务 → 钱包 → 账单 → 常见问题 → 下载账单 → 用于个人对账；
+      支付宝：我的 → 账单 → 右上角「…」→ 开具交易流水证明 → 用于个人对账。导出后在「文件」里选进来即可。
+    </div>
+    <label class="file-btn">
+      选择 CSV 文件
+      <input id="importFile" type="file" accept=".csv,text/csv,text/plain" hidden>
+    </label>
+    <div class="field-label">或直接粘贴账单文本</div>
+    <textarea id="importText" rows="4" placeholder="把 CSV 内容粘贴到这里"></textarea>
+    <button class="ghost-btn" id="importParse" type="button">解析</button>
+    <div id="importPreview"></div>
+  </div>
+</section>
+
+<div class="toast hidden" id="toast"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
